@@ -1,0 +1,28 @@
+#!/bin/bash
+USER=$(whoami)
+LOGGEDIN=$(who | grep $USER | cut -d" " -f13-14)
+DATELOGGEDIN=$(echo $LOGGEDIN | cut -d" " -f1)
+DAYLOGGEDIN=$(echo $DATELOGGEDIN | cut -d"-" -f3)
+TIMELOGGEDIN=$(echo $LOGGEDIN | cut -d" " -f2)
+HOURLOGGEDIN=$(echo $TIMELOGGEDIN | cut -d":" -f1)
+MINUTELOGGEDIN=$(echo $TIMELOGGEDIN | cut -d":" -f2)
+
+DAYNOW=$(date +%d)
+HOURNOW=$(date +%k)
+MINUTENOW=$(date +%M)
+
+DAYSLOGGEDIN=$(expr $DAYNOW - $DAYLOGGEDIN)
+HOURSLOGGEDIN=$(expr $HOURNOW - $HOURLOGGEDIN)
+MINUTESLOGGEDIN=$(expr $MINUTENOW - $MINUTELOGGEDIN)
+
+if [ "$MINUTESLOGGEDIN" -lt "0" ]; then
+    MINUTESLOGGEDIN=$(expr $MINUTESLOGGEDIN + 60)
+    HOURSLOGGEDIN=$(expr $HOURSLOGGEDIN - 1)
+fi
+
+if [ "$HOURSLOGGEDIN" -lt "0" ]; then
+    HOURSLOGGEDIN=$(expr $HOURSLOGGEDIN + 24)
+    DAYSLOGGEDIN=$(expr $DAYSLOGGEDIN - 1)
+fi
+
+echo logged in for $DAYSLOGGEDIN days $HOURSLOGGEDIN hours $MINUTESLOGGEDIN minutes
